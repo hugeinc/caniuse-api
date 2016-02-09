@@ -42,5 +42,5 @@ def apiGetFeature(slug):
 
 if __name__ == '__main__':
 	allFeatures.load()
-	app.debug = True
+	#app.debug = True
 	app.run()
