@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, abort
-from features import FeatureMap, FeatureModel
+from features import FeatureService, FeatureModel
 
 app = Flask(__name__)
-allFeatures = FeatureMap()
+features = FeatureService()
 
 
 @app.errorhandler(404)
@@ -15,16 +15,16 @@ def index():
 
 @app.route('/api/features/data', methods=['GET'])
 def apiAllFeaturesData():
-	return jsonify({'data':allFeatures.data})
+	return jsonify({'data': features.data})
 
 @app.route('/api/features/all', methods=['GET'])
 def apiAllFeatures():
-	return jsonify({'data':allFeatures.endpoints})
+	return jsonify({'data': features.endpoints})
 
 @app.route('/api/features/search', methods=['GET'])
 def apiFeatureSearch():
 	query = request.args.get('q')
-	endpoint = allFeatures.search(query)
+	endpoint = features.search(query)
 	if (endpoint):
 		feature = FeatureModel(endpoint)
 		feature.load()
@@ -34,13 +34,13 @@ def apiFeatureSearch():
 
 @app.route('/api/features/<string:slug>', methods=['GET'])
 def apiGetFeature(slug):
-	feature = allFeatures.getFeature(slug)
+	feature = features.getFeature(slug)
 	if (feature):
 		return jsonify(feature)
 	else:
 		return abort(404, {'errors':dict(message="feature not found")})
 
 if __name__ == '__main__':
-	allFeatures.load()
+	features.load()
 	#app.debug = True
 	app.run()

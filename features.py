@@ -2,7 +2,7 @@ import requests
 
 ALL_FEATURES_ENDPOINT = "https://api.github.com/repos/fyrd/caniuse/contents/features-json"
 
-class FeatureMap(object):
+class FeatureService(object):
 
 	endpoint = None	
 	data = []
@@ -55,7 +55,6 @@ class FeatureMap(object):
 			return result
 		# finally, give up...
 		return None
-
 
 class FeatureModel(object):
 
