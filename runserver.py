@@ -15,19 +15,19 @@ def index():
     return "The Can I Use API!"
 
 
+@app.route('/api/features', methods=['GET'])
+def api_all_features():
+    return jsonify({'features': features.qp.map})
+
+
 @app.route('/api/features/data', methods=['GET'])
 def api_all_features_data():
-    return jsonify({'data': features.data})
-
-
-@app.route('/api/features/all', methods=['GET'])
-def api_all_features():
-    return jsonify({'data': features.endpoints})
+    return jsonify({'data': features.config})
 
 
 @app.route('/api/features/search', methods=['GET'])
 def api_feature_search():
-    query = request.args.get('q')
+    query = request.args.get('q', '')
     feature = features.search(query)
     if feature:
         return jsonify(feature.data)
@@ -38,7 +38,7 @@ def api_feature_search():
 def api_get_feature(slug):
     feature = features.get_feature(slug)
     if feature:
-        return jsonify(feature)
+        return jsonify(feature.data)
     else:
         return abort(404, {'errors': dict(message="feature not found")})
 
