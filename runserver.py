@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, abort
-from features import FeatureService, FeatureModel
+from features import FeatureService
 
 app = Flask(__name__)
 features = FeatureService()
@@ -12,37 +12,38 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-	return "The Can I Use API!"
+    return "The Can I Use API!"
 
 
 @app.route('/api/features/data', methods=['GET'])
-def apiAllFeaturesData():
-	return jsonify({'data': features.data})
+def api_all_features_data():
+    return jsonify({'data': features.data})
 
 
 @app.route('/api/features/all', methods=['GET'])
-def apiAllFeatures():
-	return jsonify({'data': features.endpoints})
+def api_all_features():
+    return jsonify({'data': features.endpoints})
 
 
 @app.route('/api/features/search', methods=['GET'])
-def apiFeatureSearch():
-	query = request.args.get('q')
-	feature = features.search(query)
-	if (feature):
-		return jsonify(feature.data)
-	return abort(404, {'errors':dict(message="feature %r not found" % query)})
+def api_feature_search():
+    query = request.args.get('q')
+    feature = features.search(query)
+    if feature:
+        return jsonify(feature.data)
+    return abort(404, {'errors': dict(message="feature %r not found" % query)})
 
 
 @app.route('/api/features/<string:slug>', methods=['GET'])
-def apiGetFeature(slug):
-	feature = features.getFeature(slug)
-	if (feature):
-		return jsonify(feature)
-	else:
-		return abort(404, {'errors':dict(message="feature not found")})
+def api_get_feature(slug):
+    feature = features.get_feature(slug)
+    if feature:
+        return jsonify(feature)
+    else:
+        return abort(404, {'errors': dict(message="feature not found")})
+
 
 if __name__ == '__main__':
-	features.load()
-	#app.debug = True
-	app.run()
+    features.load()
+    # app.debug = True
+    app.run()
