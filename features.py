@@ -29,32 +29,63 @@ class FeatureService(object):
 		return None
 
 	def search(self, query):
-		# todo need to refactor this...	
+		url = self.queryToEndPoint(query)
+		if (url):
+			feature = FeatureModel(url)
+			feature.load()
+			return feature
+		return None
+
+	def queryToEndPoint(self, query):
+		qp = QueryParser()
 		# 1st convert to lower case
-		query = query.lower()
-		result = self.endpoints.get(query)
-		if result:
-			return result
+		query = qp.prep(query)
+		endpoint = self.endpoints.get(query)
+		if endpoint:
+			return endpoint
 		# 2nd try replacing spaces with dashes
-		query = "-".join(query.split(' '))
-		result = self.endpoints.get(query)
-		if result:
-			return result
+		slugified = qp.slugify(query)
+		endpoint = self.endpoints.get(slugified)
+		if endpoint:
+			return endpoint
 		# 3rd try prepending "css-''
-		result = self.endpoints.get("css-" + query)
-		if (result):
-			return result
+		endpoint = self.endpoints.get(qp.prepend(slugified, 'css'))
+		if (endpoint):
+			return endpoint
 		# 4th try prepending "css3-''
-		result = self.endpoints.get("css3-" + query)
-		if (result):
-			return result
+		endpoint = self.endpoints.get(qp.prepend(slugified, 'css3'))
+		if (endpoint):
+			return endpoint
 		# Try removing dashes
-		query = ''.join(query.split('-'))
-		result = self.endpoints.get(query)
-		if (result):
-			return result
+		condensed = qp.condense(query)
+		endpoint = self.endpoints.get(condensed)
+		if (endpoint):
+			return endpoint
+		endpoint = self.endpoints.get(qp.prepend(condensed, 'css'))
+		if (endpoint):
+			return endpoint
+		endpoint = self.endpoints.get(qp.prepend(condensed, 'css3'))
+		if (endpoint):
+			return endpoint
+
 		# finally, give up...
 		return None
+
+
+class QueryParser(object):
+
+	def prep(self, str):
+		return " ".join(str.lower().strip().split('+'))
+
+	def slugify(self, str):
+		return '-'.join(str.split())
+
+	def prepend(self, str, prefix):
+		return '-'.join([prefix, str])
+
+	def condense(self, str):
+		return ''.join(str.split())
+
 
 class FeatureModel(object):
 
