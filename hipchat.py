@@ -38,3 +38,34 @@ class HipChatMessage(object):
             return True
         except (AttributeError, ValueError, TypeError):
             return False
+
+
+class HipChatResponse(object):
+
+    def __init__(self, message, color="green", notify=False, message_format="html"):
+        self.data = {
+            "color": color,
+            "message": message,
+            "notify": notify,
+            "message_format": message_format
+        }
+
+
+class ICanHazBot(object):
+
+    def __init__(self, feature_service):
+        self.features = feature_service
+
+    def parse_request(self, request_json):
+        message = HipChatMessage(request_json)
+        if message.content:
+            feature = self.features.search(message.content)
+            if feature:
+                # todo handle exceptions
+                feature.load()
+                response = HipChatResponse(feature.data.get('description'))
+            else:
+                response = HipChatResponse("Feature not found", 'red')
+        else:
+            response = HipChatResponse("No message content. Reply with a help command.", 'gray')
+        return response
