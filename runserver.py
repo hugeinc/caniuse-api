@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, abort
 from features import FeatureService
 from hipchat import ICanHazBot
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 features = FeatureService()
 
 
