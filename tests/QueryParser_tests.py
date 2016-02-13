@@ -29,6 +29,11 @@ def test_get_slug():
     qp.add_valid_slug('web-sockets')
     qp.add_valid_slug('ambient-light')
     qp.add_valid_slug('css-transitions')
+    qp.add_valid_slug('arrow-functions')
+    qp.add_valid_slug('websockets')
     assert_equal(qp.get_slug("Ambient Light"), 'ambient-light')
     assert_equal(qp.get_slug("Ambient Light"), 'ambient-light')
     assert_equal(qp.get_slug("Transitions"), 'css-transitions')
+    #todo fix these
+    assert_equal(qp.get_slug("web-sockets"), 'websockets')
+    assert_equal(qp.get_slug("arrowfunctions"), 'arrow-functions')
