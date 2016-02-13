@@ -15,6 +15,7 @@ class FeatureService(object):
         self.qp = QueryParser(['css', 'css3'])
 
     def load(self):
+        # todo handle exceptions
         r = requests.get(self.endpoint)
         self.parse(r.json())
 
@@ -34,6 +35,7 @@ class FeatureService(object):
     def search(self, query):
         slug = self.qp.get_slug(query)
         if slug:
+            # todo handle exceptions
             feature = FeatureModel(slug)
             feature.load()
             return feature
