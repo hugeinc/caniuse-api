@@ -17,7 +17,7 @@ def index():
 
 @app.route('/api/features', methods=['GET'])
 def api_all_features():
-    return jsonify({'features': features.qp.map})
+    return jsonify({'features': features.qp.valid_slugs})
 
 
 @app.route('/api/features/data', methods=['GET'])

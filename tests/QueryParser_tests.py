@@ -24,6 +24,8 @@ def test_prepend():
 
 def test_get_slug():
     # todo more tests!
-    qp = QueryParser()
-    qp.map.append('ambient-light')
+    qp = QueryParser(['css', 'css3'])
+    qp.add_valid_slug('ambient-light')
+    qp.add_valid_slug('css-transitions')
     assert_equal(qp.get_slug(" Ambient Light"), 'ambient-light')
+    assert_equal(qp.get_slug("Transitions"), 'css-transitions')

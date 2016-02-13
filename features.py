@@ -5,13 +5,14 @@ FEATURE_ENDPOINT = "https://raw.githubusercontent.com/Fyrd/caniuse/master/featur
 
 
 class FeatureService(object):
+
     endpoint = None
     qp = None
     config = []
 
     def __init__(self, config_endpoint=CONFIG_ENDPOINT):
         self.endpoint = config_endpoint
-        self.qp = QueryParser()
+        self.qp = QueryParser(['css', 'css3'])
 
     def load(self):
         r = requests.get(self.endpoint)
@@ -21,10 +22,10 @@ class FeatureService(object):
         self.config = data
         for item in data:
             slug = item.get('name').split('.json')[0]
-            self.qp.map.append(slug)
+            self.qp.add_valid_slug(slug)
 
     def get_feature(self, slug):
-        if slug in self.qp.map:
+        if self.qp.is_valid_slug(slug):
             feature = FeatureModel(slug)
             feature.load()
             return feature
@@ -57,7 +58,21 @@ class QueryParser(object):
     def condense(val):
         return ''.join(val.split())
 
-    map = []
+    map = {}
+    prefixes = None
+    valid_slugs = None
+
+    def __init__(self, prefixes=[], valid_slugs=[]):
+        self.prefixes = prefixes
+        self.valid_slugs = valid_slugs
+
+    def add_valid_slug(self, slug):
+        if slug not in self.valid_slugs:
+            self.valid_slugs.append(slug)
+            # todo add a dict called "map"
+            # todo covert slug to dashless, spaceless, un-prefixed string
+            # todo key prepped queries in dict, "map" against valid slugs
+            # todo refactor search to use this
 
     def get_slug(self, query):
 
@@ -65,17 +80,16 @@ class QueryParser(object):
         formats = [query, QueryParser.slugify(query), QueryParser.condense(query)]
 
         for formatted in formats:
-
-            if formatted in self.map:
+            if formatted in self.valid_slugs:
                 return formatted
-
-            if QueryParser.prepend(formatted, 'css') in self.map:
-                return QueryParser.prepend(formatted, 'css')
-
-            if QueryParser.prepend(formatted, 'css3') in self.map:
-                return QueryParser.prepend(formatted, 'css3')
-
+            for prefix in self.prefixes:
+                prefixed = QueryParser.prepend(formatted, prefix)
+                if prefixed in self.valid_slugs:
+                    return prefixed
         return None
+
+    def is_valid_slug(self, slug):
+        return slug in self.valid_slugs
 
 
 class FeatureModel(object):
