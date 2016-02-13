@@ -15,7 +15,7 @@ def index():
     return "The Can I Use API!"
 
 
-@app.route('/api/features', methods=['GET'])
+@app.route('/api/features/', methods=['GET'])
 def api_all_features():
     return jsonify({'features': features.qp.valid_slugs})
 
