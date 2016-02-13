@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, abort
 from features import FeatureService
+from hipchat import ICanHazBot
 
 app = Flask(__name__)
 features = FeatureService()
@@ -41,6 +42,13 @@ def api_get_feature(slug):
         return jsonify(feature.data)
     else:
         return abort(404, {'errors': dict(message="feature not found")})
+
+
+@app.route('/api/features/hipchat', methods=['POST'])
+def api_hip_chat():
+    bot = ICanHazBot(features)
+    response = bot.parse_request(request.get_json())
+    return jsonify(response.data)
 
 
 if __name__ == '__main__':
