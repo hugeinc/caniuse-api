@@ -1,3 +1,4 @@
+from flask import render_template
 
 class HipChatMessage(object):
 
@@ -63,7 +64,9 @@ class ICanHazBot(object):
             if feature:
                 # todo handle exceptions
                 feature.load()
-                response = HipChatResponse(feature.data.get('description'))
+                response = HipChatResponse(
+                    render_template('hipchat/feature_support_message.html', data=feature.data)
+                )
             else:
                 response = HipChatResponse("Feature not found", 'red')
         else:
