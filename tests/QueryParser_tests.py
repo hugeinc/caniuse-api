@@ -4,6 +4,7 @@ from features import QueryParser
 
 def test_prep():
     assert_equal(QueryParser.prep('box shadow'), 'box shadow')
+    assert_equal(QueryParser.prep('box  shadow '), 'box shadow')
     assert_equal(QueryParser.prep(' Box shadOw '), 'box shadow')
     assert_equal(QueryParser.prep('Box+shadoW '), 'box shadow')
 
@@ -25,7 +26,9 @@ def test_prepend():
 def test_get_slug():
     # todo more tests!
     qp = QueryParser(['css', 'css3'])
+    qp.add_valid_slug('web-sockets')
     qp.add_valid_slug('ambient-light')
     qp.add_valid_slug('css-transitions')
-    assert_equal(qp.get_slug(" Ambient Light"), 'ambient-light')
+    assert_equal(qp.get_slug("Ambient Light"), 'ambient-light')
+    assert_equal(qp.get_slug("Ambient Light"), 'ambient-light')
     assert_equal(qp.get_slug("Transitions"), 'css-transitions')

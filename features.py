@@ -44,7 +44,7 @@ class QueryParser(object):
 
     @staticmethod
     def prep(val):
-        return " ".join(val.lower().strip().split('+'))
+        return " ".join((" ".join(val.split())).lower().split('+'))
 
     @staticmethod
     def slugify(val):
