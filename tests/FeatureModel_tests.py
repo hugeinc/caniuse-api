@@ -6,7 +6,7 @@ from mock import mock_loader
 def test_stat_parse():
     mock = mock_loader.load_mock('features/transforms2d')
     feature = FeatureModel("transforms2d")
-    feature.parse({"stats":mock.get('stats')})
+    feature.parse(mock)
     assert_equals(feature.support.get('safari').get('y'), '9')
     assert_equals(feature.support.get('opera').get('n'), '9')
 
