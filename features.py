@@ -96,7 +96,8 @@ class QueryParser(object):
 
 class FeatureModel(object):
 
-    data = []
+    data = {}
+    support = {}
     endpoint = None
     slug = None
 
@@ -108,5 +109,45 @@ class FeatureModel(object):
         self.parse(r.json())
         return self.data
 
+    @staticmethod
+    def float_sem_ver(s):
+        if '-' in s:
+            return FeatureModel.float_multiple_versions(s)
+        try:
+            digits = s.split('.')
+            return float('.'.join([digits.pop(0), ''.join(digits)]))
+        except ValueError:
+            return None
+
+    @staticmethod
+    def float_multiple_versions(s):
+        lowest = s.split('-').pop(0)
+        try:
+            return float(lowest)
+        except ValueError:
+            return FeatureModel.float_sem_ver(lowest)
+
+    @staticmethod
+    def float_version(s):
+        try:
+            return float(s)
+        except ValueError:
+            return FeatureModel.float_multiple_versions(s)
+
+    @staticmethod
+    def parse_browser_stats(data):
+        stat_map = {}
+        for version, status in data.iteritems():
+            current_stat = stat_map.get(status)
+            if current_stat:
+                if FeatureModel.float_version(version) < FeatureModel.float_version(current_stat):
+                    stat_map[status] = version
+            else:
+                stat_map[status] = version
+        return stat_map
+
     def parse(self, data):
         self.data = data
+        stats = self.data.get('stats').items()
+        for browser, stat in stats:
+            self.support[browser] = FeatureModel.parse_browser_stats(stat)
