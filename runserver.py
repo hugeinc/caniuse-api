@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify, abort
 from features import FeatureService
 from hipchat import ICanHazBot
+from flask.ext.markdown import Markdown
 
 app = Flask(__name__, template_folder="templates")
+Markdown(app)
+
 features = FeatureService()
 
 
