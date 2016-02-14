@@ -65,7 +65,7 @@ class ICanHazBot(object):
                 # todo handle exceptions
                 feature.load()
                 response = HipChatResponse(
-                    render_template('hipchat/feature_support_message.html', data=feature.data)
+                    render_template('hipchat/feature_support_message.html', feature=feature)
                 )
             else:
                 response = HipChatResponse("Feature not found", 'red')

@@ -1,2 +1,18 @@
-<b>{{ data.title }}</b>
-<p>{{ data.description }}</p>
+<b>{{ feature.data.title }}</b>
+<p>{{ feature.data.description }}</p>
+{#  y + x = partial
+    y = yes
+    n = not supported
+    p = not supported ?
+#}
+<ul>
+    {% for browser, stats in feature.support.iteritems() %}
+    <li>
+        <b>{{ browser }}</b>
+        {% for stat, version in stats.iteritems() %}
+            {{stat ~ ':' ~ version ~ '+' }}
+            {% if not loop.last %}|{% endif %}
+        {% endfor %}
+    </li>
+    {% endfor %}
+</ul>
