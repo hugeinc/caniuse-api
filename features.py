@@ -64,9 +64,9 @@ class QueryParser(object):
     prefixes = None
     valid_slugs = None
 
-    def __init__(self, prefixes=[], valid_slugs=[]):
-        self.prefixes = prefixes
-        self.valid_slugs = valid_slugs
+    def __init__(self, prefixes=None, valid_slugs=None):
+        self.prefixes = prefixes or []
+        self.valid_slugs = valid_slugs or []
 
     def add_valid_slug(self, slug):
         if slug not in self.valid_slugs:
@@ -95,19 +95,6 @@ class QueryParser(object):
 
 
 class FeatureModel(object):
-
-    data = {}
-    support = {}
-    endpoint = None
-    slug = None
-
-    def __init__(self, slug):
-        self.endpoint = FEATURE_ENDPOINT % slug
-
-    def load(self):
-        r = requests.get(self.endpoint)
-        self.parse(r.json())
-        return self.data
 
     @staticmethod
     def float_sem_ver(s):
@@ -145,6 +132,19 @@ class FeatureModel(object):
             else:
                 stat_map[status] = version
         return stat_map
+
+    data = {}
+    support = {}
+    endpoint = None
+    slug = None
+
+    def __init__(self, slug):
+        self.endpoint = FEATURE_ENDPOINT % slug
+
+    def load(self):
+        r = requests.get(self.endpoint)
+        self.parse(r.json())
+        return self.data
 
     def parse(self, data):
         self.data = data
