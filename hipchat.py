@@ -54,6 +54,17 @@ class HipChatResponse(object):
 
 class ICanHazBot(object):
 
+    browser_map = {
+        'ie': 'IE',
+        'edge': 'Edge',
+        'firefox': 'Firefox',
+        'chrome': 'Chrome',
+        'safari': 'Safari',
+        'opera': 'Opera',
+        'ios_saf': 'iOS',
+        'android': 'Android'
+    }
+
     def __init__(self, feature_service):
         self.features = feature_service
 
@@ -65,9 +76,13 @@ class ICanHazBot(object):
                 # todo handle exceptions
                 feature.load()
                 response = HipChatResponse(
-                    render_template('hipchat/feature_support_message.html', feature=feature)
+                    render_template(
+                        'hipchat/feature_support_message.html',
+                        feature=feature, browser_map=self.browser_map
+                    )
                 )
             else:
+                #todo have a list all available features command
                 response = HipChatResponse("Feature not found", 'red')
         else:
             response = HipChatResponse("No message content. Reply with a help command.", 'gray')
