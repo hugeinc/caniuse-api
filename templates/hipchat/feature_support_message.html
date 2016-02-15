@@ -4,11 +4,11 @@
 {% macro support_stats(feat, browser_map, flags) %}
     {% for browser_id, name in browser_map.iteritems() %}
         <td>
-            {% set min_version, note = feat.get_min_support_by_flags(browser_id, flags) %}
+            {% set min_version, notes = feat.get_min_support_by_flags(browser_id, flags) %}
             {% if min_version %}
-                {% if note %}
+                {% for note in notes %}
                     [{{ note.index }}]
-                {% endif %}
+                {% endfor %}
                  v{{ min_version }}
                 <b>+</b>
             {% else %}

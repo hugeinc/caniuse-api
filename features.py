@@ -157,20 +157,36 @@ class FeatureModel(object):
         for flag in flags:
             version = browser_support.get(flag)
             if version:
-                return version, None
-            else:
-                for index, note in self.data.get('notes_by_num').iteritems():
-                    version = browser_support.get(''.join([flag, ' ', '#', index]))
-                    if version:
-                        return version, {'index': index, 'text': note}
+                return version, []
+            for key in browser_support.keys():
+                if flag in key:
+                    stripped_key, notes = self.get_version_notes_from_flag(key)
+                    if stripped_key and stripped_key == flag:
+                        return browser_support.get(key), notes
         return None, None
+
+    def get_version_notes_from_flag(self, v_flag):
+        try:
+            notes_from_flag = v_flag[v_flag.index('#'):]
+            flag = v_flag[0:v_flag.index(' #')]
+            notes = []
+            for note_i in ''.join(notes_from_flag.split('#')).split():
+                notes.append({
+                    'index': note_i,
+                    'text': self.data.get('notes_by_num').get(note_i)
+                })
+            return flag, notes
+        except ValueError:
+            pass
+        return v_flag, None
 
     def get_relevant_notes(self, browser_keys, flags):
         notes = []
         if self.data.get('notes'):
             notes.append({'index': None, 'text': self.data.get('notes')})
         for browser_id in browser_keys:
-            version, note = self.get_min_support_by_flags(browser_id, flags)
-            if note:
-                notes.append(note)
+            version, sup_notes = self.get_min_support_by_flags(browser_id, flags)
+            print browser_id, version, sup_notes
+            if sup_notes:
+                notes = notes + sup_notes
         return notes
