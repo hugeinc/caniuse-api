@@ -12,7 +12,7 @@ class FeatureService(object):
 
     def __init__(self, config_endpoint=CONFIG_ENDPOINT):
         self.endpoint = config_endpoint
-        self.qp = QueryParser(['css', 'css3'])
+        self.qp = QueryParser(['css', 'css3'], ['2d'])
 
     def load(self):
         # todo handle exceptions
@@ -44,51 +44,37 @@ class FeatureService(object):
 
 class QueryParser(object):
 
-    @staticmethod
-    def prep(val):
-        return " ".join((" ".join(val.split())).lower().split('+'))
-
-    @staticmethod
-    def slugify(val):
-        return '-'.join(val.split())
-
-    @staticmethod
-    def prepend(val, prefix):
-        return '-'.join([prefix, val])
-
-    @staticmethod
-    def condense(val):
-        return ''.join(val.split())
-
-    map = {}
+    min_map = {}
     prefixes = None
+    suffixes = None
     valid_slugs = None
 
-    def __init__(self, prefixes=None, valid_slugs=None):
+    def __init__(self, prefixes=None, suffixes=None, valid_slugs=None):
         self.prefixes = prefixes or []
+        self.suffixes = suffixes or []
         self.valid_slugs = valid_slugs or []
+
+    def minify(self, s):
+        """minifies a slug or query by stripping all dashes, spaces, prefixes and suffixes"""
+        s = s.lower()
+        to_remove = [None, '-', '+']
+        for char in to_remove:
+            s = ''.join(s.split(char))
+        for prefix in self.prefixes:
+            if prefix in s and s.index(prefix) == 0:
+                s = s[len(prefix):]
+        for suffix in self.suffixes:
+            if suffix in s and s.index(suffix) == len(s) - len(suffix):
+                s = s[:-1*len(suffix)]
+        return s
 
     def add_valid_slug(self, slug):
         if slug not in self.valid_slugs:
             self.valid_slugs.append(slug)
-            # todo add a dict called "map"
-            # todo covert slug to dashless, spaceless, un-prefixed string
-            # todo key prepped queries in dict, "map" against valid slugs
-            # todo refactor search to use this
+            self.min_map[self.minify(slug)] = slug
 
     def get_slug(self, query):
-
-        query = QueryParser.prep(query)
-        formats = [query, QueryParser.slugify(query), QueryParser.condense(query)]
-
-        for formatted in formats:
-            if formatted in self.valid_slugs:
-                return formatted
-            for prefix in self.prefixes:
-                prefixed = QueryParser.prepend(formatted, prefix)
-                if prefixed in self.valid_slugs:
-                    return prefixed
-        return None
+        return self.min_map.get(self.minify(query))
 
     def is_valid_slug(self, slug):
         return slug in self.valid_slugs
