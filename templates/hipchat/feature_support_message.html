@@ -1,80 +1,65 @@
 
 <p><b>{{ feature.data.title }}</b>: {{ feature.data.description }}</p>
-{#  y + x = partial
-    y = yes
-    n = not supported
-    p = not supported ?
-#}
+
+{% macro support_stats(feat, browser_map, flags) %}
+    {% for browser_id, name in browser_map.iteritems() %}
+        <td>
+            {% set min_version, note = feat.get_min_support_by_flags(browser_id, flags) %}
+            {% if min_version %}
+                {% if note %}
+                    [{{ note.index }}]
+                {% endif %}
+                 v{{ min_version }}
+                <b>+</b>
+            {% else %}
+                &#x2610
+            {% endif %}
+        </td>
+        {% if not loop.last %}
+            <td>&nbsp;|&nbsp;</td>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
 <table>
     <tr>
         <td>&nbsp;</td>
         <td>&nbsp;|&nbsp;</td>
-        {% for id, name in browser_map.items() %}
+        {% for id, name in browser_map.iteritems() %}
             <td><b>{{ name }}</b></td>
             {% if not loop.last %}
                 <td>&nbsp;|&nbsp;</td>
             {% endif %}
         {% endfor %}
     </tr>
-    {# todo this needs DRYed up #}
     <tr>
         <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Full Support&nbsp;</th>
         <td>&nbsp;|&nbsp;</td>
-        {% for id, name in browser_map.items() %}
-            {% set support = feature.support.get(id) %}
-            {% set val = support['y'] %}
-            {% if val %}
-                <td>v{{ val }}&nbsp;<b>+</b></td>
-            {% else %}
-                <td>&#x2610</td>
-            {% endif %}
-            {% if not loop.last %}
-                <td>&nbsp;|&nbsp;</td>
-            {% endif %}
-        {% endfor %}
+        {{ support_stats(feature, browser_map, ['y']) }}
     </tr>
     <tr>
         <th>&nbsp;Partial Support&nbsp;</th>
         <td>&nbsp;|&nbsp;</td>
-        {% for id, name in browser_map.items() %}
-            {% set support = feature.support.get(id) %}
-            {% set val = support['y x'] or support['a'] or support['a x'] %}
-            {% if val %}
-                <td>v{{ val }}&nbsp;<b>+</b></td>
-            {% else %}
-                <td>&#x2610</td>
-            {% endif %}
-            {% if not loop.last %}
-                <td>&nbsp;|&nbsp;</td>
-            {% endif %}
-        {% endfor %}
+        {{ support_stats(feature, browser_map, ['y x', 'a', 'a x']) }}
     </tr>
     <tr>
         <th>&nbsp;&nbsp;&nbsp;Not Supported&nbsp;</th>
         <td>&nbsp;|&nbsp;</td>
-        {% for id, name in browser_map.items() %}
-            {% set support = feature.support.get(id) %}
-            {% set val = support['n'] or support['p'] %}
-            {% if val %}
-                <td>v{{ val }}&nbsp;<b>+</b></td>
-            {% else %}
-                <td>&#x2610</td>
-            {% endif %}
-            {% if not loop.last %}
-                <td>&nbsp;|&nbsp;</td>
-            {% endif %}
-        {% endfor %}
+        {{ support_stats(feature, browser_map, ['n', 'p']) }}
     </tr>
 </table>
 <br>
 <ul>
-    {% if feature.data.notes %}
-        <li>{{ feature.data.notes|markdown }}</li>
-    {% endif %}
-    {% for i, note in feature.data.notes_by_num.iteritems() %}
-        <li>{{ ('['~ i ~ '] ' ~ note ) |markdown }}</li>
+    {% set partial_notes = feature.get_relevant_notes(browser_map.keys(), ['y x', 'a', 'a x']) %}
+    {% for note in partial_notes|sort(attribute='index') %}
+        <li>
+            {% set text = note.text %}
+            {% if note.index %}
+               {% set text = '[' ~ note.index ~ ']' ~ text %}
+            {% endif %}{{ text|markdown }}
+        </li>
     {% endfor %}
-    {% for link in feature.data.links %}
+     {% for link in feature.data.links[:3] %}
         <li><a href="{{ link.url }}">{{ link.title }}: {{ link.url }}</a></li>
     {% endfor %}
 </ul>
