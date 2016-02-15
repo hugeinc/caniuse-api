@@ -1,6 +1,7 @@
 from nose.tools import *
 from features import FeatureModel
 from mock import mock_loader
+from hipchat import browser_map
 
 
 def test_stat_parse():
@@ -9,6 +10,25 @@ def test_stat_parse():
     feature.parse(mock)
     assert_equals(feature.support.get('safari').get('y'), '9')
     assert_equals(feature.support.get('opera').get('n'), '9')
+
+
+def test_get_min_support_by_flags():
+    mock = mock_loader.load_mock('features/flexbox')
+    feature = FeatureModel('flexbox')
+    feature.parse(mock)
+    flags = ['y x', 'a', 'a x']
+    version, notes = feature.get_min_support_by_flags('ie', flags)
+    assert_equals(version, '10')
+
+
+def test_get_relevant_notes():
+    mock = mock_loader.load_mock('features/flexbox')
+    feature = FeatureModel('flexbox')
+    feature.parse(mock)
+    flags = ['y x', 'a', 'a x']
+    keys = browser_map.keys()
+    notes = feature.get_relevant_notes(keys, flags)
+    assert_equals(len(notes), 4)
 
 
 def test_float_versions():

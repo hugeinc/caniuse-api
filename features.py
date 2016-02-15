@@ -151,3 +151,26 @@ class FeatureModel(object):
         stats = self.data.get('stats').items()
         for browser, stat in stats:
             self.support[browser] = FeatureModel.parse_browser_stats(stat)
+
+    def get_min_support_by_flags(self, browser_id, flags):
+        browser_support = self.support.get(browser_id)
+        for flag in flags:
+            version = browser_support.get(flag)
+            if version:
+                return version, None
+            else:
+                for index, note in self.data.get('notes_by_num').iteritems():
+                    version = browser_support.get(''.join([flag, ' ', '#', index]))
+                    if version:
+                        return version, {'index': index, 'text': note}
+        return None, None
+
+    def get_relevant_notes(self, browser_keys, flags):
+        notes = []
+        if self.data.get('notes'):
+            notes.append({'index': None, 'text': self.data.get('notes')})
+        for browser_id in browser_keys:
+            version, note = self.get_min_support_by_flags(browser_id, flags)
+            if note:
+                notes.append(note)
+        return notes

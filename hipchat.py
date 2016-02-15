@@ -51,10 +51,9 @@ class HipChatResponse(object):
             "message_format": message_format
         }
 
+# todo this bot needs to go in a separate module
 
-class ICanHazBot(object):
-
-    browser_map = {
+browser_map = {
         'ie': 'IE',
         'edge': 'Edge',
         'firefox': 'Firefox',
@@ -64,6 +63,9 @@ class ICanHazBot(object):
         'ios_saf': 'iOS',
         'android': 'Android'
     }
+
+class ICanHazBot(object):
+
 
     def __init__(self, feature_service):
         self.features = feature_service
@@ -78,7 +80,7 @@ class ICanHazBot(object):
                 response = HipChatResponse(
                     render_template(
                         'hipchat/feature_support_message.html',
-                        feature=feature, browser_map=self.browser_map
+                        feature=feature, browser_map=browser_map
                     )
                 )
             else:
