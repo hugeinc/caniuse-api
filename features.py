@@ -186,7 +186,7 @@ class FeatureModel(object):
             notes.append({'index': None, 'text': self.data.get('notes')})
         for browser_id in browser_keys:
             version, sup_notes = self.get_min_support_by_flags(browser_id, flags)
-            print browser_id, version, sup_notes
-            if sup_notes:
-                notes = notes + sup_notes
+            for note in sup_notes or []:
+                if note not in notes:
+                    notes.append(note)
         return notes

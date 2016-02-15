@@ -44,12 +44,11 @@ def test_get_version_notes_from_flag():
 
 
 def test_get_relevant_notes():
-    # todo test websockets
-    feature = get_feature_model('flexbox')
+    feature = get_feature_model('websockets')
     flags = ['y x', 'a', 'a x']
     keys = browser_map.keys()
     notes = feature.get_relevant_notes(keys, flags)
-    assert_equals(len(notes), 4)
+    assert_equals(len(notes), 3)
 
 
 def test_float_versions():
