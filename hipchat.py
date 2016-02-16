@@ -1,5 +1,6 @@
 from flask import render_template
 
+
 class HipChatMessage(object):
 
     @staticmethod
@@ -21,6 +22,8 @@ class HipChatMessage(object):
                 cmd_slug = parts[i:i+1][0].strip()
                 parts.remove(cmd_slug)
                 return cmd_slug, ' '.join(parts).strip()
+
+    # todo add arg stripping and parsing
 
     mentions = []
     content = None
@@ -64,8 +67,8 @@ browser_map = {
         'android': 'Android'
     }
 
-class ICanHazBot(object):
 
+class ICanHazBot(object):
 
     def __init__(self, feature_service):
         self.features = feature_service
@@ -84,8 +87,9 @@ class ICanHazBot(object):
                     )
                 )
             else:
-                #todo have a list all available features command
+                # todo have a list all available features command
                 response = HipChatResponse("Feature not found", 'red')
         else:
+            # todo output a template that lists instructions on getting all features and getting a feature
             response = HipChatResponse("No message content. Reply with a help command.", 'gray')
         return response
