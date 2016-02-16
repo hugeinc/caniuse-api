@@ -166,13 +166,14 @@ class FeatureModel(object):
             pass
         return v_flag, None
 
-    def get_relevant_notes(self, browser_keys, flags):
+    def get_relevant_notes(self, browser_keys, flag_set):
         notes = []
         if self.data.get('notes'):
             notes.append({'index': None, 'text': self.data.get('notes')})
-        for browser_id in browser_keys:
-            version, sup_notes = self.get_min_support_by_flags(browser_id, flags)
-            for note in sup_notes or []:
-                if note not in notes:
-                    notes.append(note)
+        for flags in flag_set:
+            for browser_id in browser_keys:
+                version, sup_notes = self.get_min_support_by_flags(browser_id, flags)
+                for note in sup_notes or []:
+                    if note not in notes:
+                        notes.append(note)
         return notes

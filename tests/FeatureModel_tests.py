@@ -43,12 +43,26 @@ def test_get_version_notes_from_flag():
     assert_equals(notes, None)
 
 
+def test_get_version_notes_from_flag():
+    feature = get_feature_model('svg')
+    flag, notes = feature.get_version_notes_from_flag('y #2')
+    assert_equals(flag, 'y')
+    assert_equals(len(notes), 1)
+
 def test_get_relevant_notes():
     feature = get_feature_model('websockets')
     flags = ['y x', 'a', 'a x']
     keys = browser_map.keys()
     notes = feature.get_relevant_notes(keys, flags)
     assert_equals(len(notes), 3)
+
+
+def test_get_relevant_notes_supported():
+    feature = get_feature_model('svg')
+    browser_ids = browser_map.keys()
+    flags = ['y'], ['y x', 'a', 'a x']
+    notes = feature.get_relevant_notes(browser_ids, flags)
+    assert_equals(len(notes), 2)
 
 
 def test_float_versions():

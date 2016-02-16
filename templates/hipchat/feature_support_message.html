@@ -1,4 +1,9 @@
 
+{% set browser_ids = browser_map.keys() %}
+{% set supported_flags = ['y'] %}
+{% set partial_flags = ['y x', 'a', 'a x'] %}
+{% set no_support_flags = ['n', 'p'] %}
+
 <p><b>{{ feature.data.title }}</b>: {{ feature.data.description }}</p>
 
 {% macro support_stats(feat, browser_map, flags) %}
@@ -12,7 +17,7 @@
                  v{{ min_version }}
                 <b>+</b>
             {% else %}
-                &#x2610
+                &nbsp;&nbsp;&nbsp;&#x2610
             {% endif %}
         </td>
         {% if not loop.last %}
@@ -24,34 +29,31 @@
 <table>
     <tr>
         <td>&nbsp;</td>
-        <td>&nbsp;|&nbsp;</td>
-        {% for id, name in browser_map.iteritems() %}
-            <td><b>{{ name }}</b></td>
+        {% for id in browser_ids %}
+            <td><b>{{ browser_map[id] }}</b></td>
             {% if not loop.last %}
                 <td>&nbsp;|&nbsp;</td>
             {% endif %}
         {% endfor %}
     </tr>
     <tr>
-        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Full Support&nbsp;</th>
-        <td>&nbsp;|&nbsp;</td>
-        {{ support_stats(feature, browser_map, ['y']) }}
+        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Full Support&nbsp;&nbsp;</th>
+        {{ support_stats(feature, browser_map, supported_flags) }}
     </tr>
     <tr>
-        <th>&nbsp;Partial Support&nbsp;</th>
-        <td>&nbsp;|&nbsp;</td>
-        {{ support_stats(feature, browser_map, ['y x', 'a', 'a x']) }}
+        <th>&nbsp;Partial Support&nbsp;&nbsp;</th>
+        {{ support_stats(feature, browser_map, partial_flags) }}
     </tr>
     <tr>
-        <th>&nbsp;&nbsp;&nbsp;Not Supported&nbsp;</th>
-        <td>&nbsp;|&nbsp;</td>
-        {{ support_stats(feature, browser_map, ['n', 'p']) }}
+        <th>&nbsp;&nbsp;&nbsp;Not Supported&nbsp;&nbsp;</th>
+        {{ support_stats(feature, browser_map, no_support_flags) }}
     </tr>
 </table>
 <br>
 <ul>
-    {% set partial_notes = feature.get_relevant_notes(browser_map.keys(), ['y x', 'a', 'a x']) %}
-    {% for note in partial_notes|sort(attribute='index') %}
+    {% set all_flags = [supported_flags , no_support_flags , partial_flags]  %}
+    {% set notes = feature.get_relevant_notes(browser_ids, all_flags) %}
+    {% for note in notes|sort(attribute='index') %}
         <li>
             {% set text = note.text %}
             {% if note.index %}
