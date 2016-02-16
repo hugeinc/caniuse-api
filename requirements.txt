@@ -2,9 +2,11 @@ altgraph==0.10.1
 bdist-mpkg==0.4.4
 bonjour-py==0.3
 Flask==0.10.1
+Flask-Markdown==0.3
 itsdangerous==0.24
 Jinja2==2.8
 macholib==1.5
+Markdown==2.6.5
 MarkupSafe==0.23
 matplotlib==1.1.1
 modulegraph==0.10.1
