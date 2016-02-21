@@ -49,6 +49,7 @@ def test_get_version_notes_from_flag():
     assert_equals(flag, 'y')
     assert_equals(len(notes), 1)
 
+
 def test_get_relevant_notes():
     feature = get_feature_model('websockets')
     flags = ['y x', 'a', 'a x']

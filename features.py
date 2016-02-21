@@ -8,22 +8,29 @@ class FeatureService(object):
 
     endpoint = None
     qp = None
-    config = []
 
     def __init__(self, config_endpoint=CONFIG_ENDPOINT):
         self.endpoint = config_endpoint
         self.qp = QueryParser(['css', 'css3'], ['2d'])
 
-    def load(self):
-        # todo handle exceptions
-        r = requests.get(self.endpoint)
-        self.parse(r.json())
+    def load(self, config_endpoint=None):
+        endpoint = config_endpoint or self.endpoint
+        try:
+            r = requests.get(endpoint)
+            self.parse(r.json())
+        except requests.exceptions.RequestException as e:
+            # todo log e through "app" once that's been refactored
+            # todo consider loading offline data
+            print e
 
     def parse(self, data):
-        self.config = data
-        for item in data:
-            slug = item.get('name').split('.json')[0]
-            self.qp.add_valid_slug(slug)
+        try:
+            for item in data:
+                slug = item.get('name').split('.json')[0]
+                self.qp.add_valid_slug(slug)
+        except AttributeError:
+            # todo log parsing error through "app" once that's been refactored
+            pass
 
     def get_feature(self, slug):
         if self.qp.is_valid_slug(slug):
@@ -35,7 +42,6 @@ class FeatureService(object):
     def search(self, query):
         slug = self.qp.get_slug(query)
         if slug:
-            # todo handle exceptions
             feature = FeatureModel(slug)
             feature.load()
             return feature
@@ -119,7 +125,7 @@ class FeatureModel(object):
                 stat_map[status] = version
         return stat_map
 
-    data = {}
+    data = None
     support = {}
     endpoint = None
     slug = None
@@ -128,15 +134,23 @@ class FeatureModel(object):
         self.endpoint = FEATURE_ENDPOINT % slug
 
     def load(self):
-        r = requests.get(self.endpoint)
-        self.parse(r.json())
+        try:
+            r = requests.get(self.endpoint)
+            self.parse(r.json())
+        except requests.exceptions.RequestException as e:
+            # todo log error through "app" once that's been refactored
+            print e
         return self.data
 
     def parse(self, data):
-        self.data = data
-        stats = self.data.get('stats').items()
-        for browser, stat in stats:
-            self.support[browser] = FeatureModel.parse_browser_stats(stat)
+        try:
+            stats = data.get('stats').items()
+            self.data = data
+            for browser, stat in stats:
+                self.support[browser] = FeatureModel.parse_browser_stats(stat)
+        except AttributeError as e:
+            # todo log parsing error through "app" once that's been refactored
+            print e
 
     def get_min_support_by_flags(self, browser_id, flags):
         browser_support = self.support.get(browser_id)

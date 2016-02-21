@@ -24,16 +24,11 @@ def api_all_features():
     return jsonify({'features': features.qp.valid_slugs})
 
 
-@app.route('/api/features/data', methods=['GET'])
-def api_all_features_data():
-    return jsonify({'data': features.config})
-
-
 @app.route('/api/features/search', methods=['GET'])
 def api_feature_search():
     query = request.args.get('q', '')
     feature = features.search(query)
-    if feature:
+    if feature and feature.data:
         return jsonify(feature.data)
     return abort(404, {'errors': dict(message="feature %r not found" % query)})
 
@@ -41,7 +36,7 @@ def api_feature_search():
 @app.route('/api/features/<string:slug>', methods=['GET'])
 def api_get_feature(slug):
     feature = features.get_feature(slug)
-    if feature:
+    if feature and feature.data:
         return jsonify(feature.data)
     else:
         return abort(404, {'errors': dict(message="feature not found")})

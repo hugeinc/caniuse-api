@@ -6,7 +6,7 @@ class HipChatMessage(object):
     @staticmethod
     def separate_mentions(msg, mentions):
         for name in mentions:
-            handle = ''.join(['@', name])  # todo if HipChat doesnt append "@", remove this line
+            handle = ''.join(['@', name])
             if handle in msg:
                 parts = msg.split()
                 parts.remove(handle)
@@ -77,7 +77,7 @@ class ICanHazBot(object):
         message = HipChatMessage(request_json)
         if message.content:
             feature = self.features.search(message.content)
-            if feature:
+            if feature and feature.data:
                 # todo handle exceptions
                 feature.load()
                 response = HipChatResponse(
