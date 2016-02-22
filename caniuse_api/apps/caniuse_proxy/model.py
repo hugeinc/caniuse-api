@@ -1,47 +1,23 @@
 import requests
 from flask import current_app
+from .util import float_version
 
-FEATURE_ENDPOINT = "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/%s.json"
+ENDPOINT = "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/%s.json"
+
+
+def parse_browser_stats(data):
+    stat_map = {}
+    for version, status in data.iteritems():
+        current_stat = stat_map.get(status)
+        if current_stat:
+            if float_version(version) < float_version(current_stat):
+                stat_map[status] = version
+        else:
+            stat_map[status] = version
+    return stat_map
 
 
 class FeatureModel(object):
-
-    @staticmethod
-    def float_sem_ver(s):
-        if '-' in s:
-            return FeatureModel.float_multiple_versions(s)
-        try:
-            digits = s.split('.')
-            return float('.'.join([digits.pop(0), ''.join(digits)]))
-        except ValueError:
-            return None
-
-    @staticmethod
-    def float_multiple_versions(s):
-        lowest = s.split('-').pop(0)
-        try:
-            return float(lowest)
-        except ValueError:
-            return FeatureModel.float_sem_ver(lowest)
-
-    @staticmethod
-    def float_version(s):
-        try:
-            return float(s)
-        except ValueError:
-            return FeatureModel.float_multiple_versions(s)
-
-    @staticmethod
-    def parse_browser_stats(data):
-        stat_map = {}
-        for version, status in data.iteritems():
-            current_stat = stat_map.get(status)
-            if current_stat:
-                if FeatureModel.float_version(version) < FeatureModel.float_version(current_stat):
-                    stat_map[status] = version
-            else:
-                stat_map[status] = version
-        return stat_map
 
     data = None
     support = {}
@@ -49,7 +25,7 @@ class FeatureModel(object):
     slug = None
 
     def __init__(self, slug):
-        self.endpoint = FEATURE_ENDPOINT % slug
+        self.endpoint = ENDPOINT % slug
 
     def load(self):
         try:
@@ -68,7 +44,7 @@ class FeatureModel(object):
             stats = data.get('stats').items()
             self.data = data
             for browser, stat in stats:
-                self.support[browser] = FeatureModel.parse_browser_stats(stat)
+                self.support[browser] = parse_browser_stats(stat)
         except AttributeError as e:
             current_app.logger.error(
                 'Error parsing model for Feature: %r \n %r' %
@@ -109,7 +85,10 @@ class FeatureModel(object):
             notes.append({'index': None, 'text': self.data.get('notes')})
         for flags in flag_set:
             for browser_id in browser_keys:
-                version, sup_notes = self.get_min_support_by_flags(browser_id, flags)
+                version, sup_notes = self.get_min_support_by_flags(
+                    browser_id,
+                    flags
+                )
                 for note in sup_notes or []:
                     if note not in notes:
                         notes.append(note)

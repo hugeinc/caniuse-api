@@ -1,4 +1,29 @@
 
+def float_sem_ver(s):
+    if '-' in s:
+        return float_multiple_versions(s)
+    try:
+        digits = s.split('.')
+        return float('.'.join([digits.pop(0), ''.join(digits)]))
+    except ValueError:
+        return None
+
+
+def float_multiple_versions(s):
+    lowest = s.split('-').pop(0)
+    try:
+        return float(lowest)
+    except ValueError:
+        return float_sem_ver(lowest)
+
+
+def float_version(s):
+    try:
+        return float(s)
+    except ValueError:
+        return float_multiple_versions(s)
+
+
 class QueryParser(object):
 
     min_map = {}
@@ -12,7 +37,10 @@ class QueryParser(object):
         self.valid_slugs = valid_slugs or []
 
     def minify(self, s):
-        """minifies a slug or query by stripping all dashes, spaces, prefixes and suffixes"""
+        """
+        Minify a slug or query by stripping all dashes,
+        spaces, prefixes and suffixes
+        """
         s = s.lower()
         to_remove = [None, '-', '+']
         for char in to_remove:

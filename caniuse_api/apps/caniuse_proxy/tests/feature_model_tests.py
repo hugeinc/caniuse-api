@@ -1,4 +1,4 @@
-from nose.tools import assert_equals, assert_greater
+from nose.tools import assert_equals
 from caniuse_api.apps.caniuse_proxy.model import FeatureModel
 from caniuse_api.apps.caniuse_bot import browser_map
 from caniuse_api.mock import mock_loader
@@ -64,19 +64,3 @@ def test_get_relevant_notes_supported():
     flags = ['y'], ['y x', 'a', 'a x']
     notes = feature.get_relevant_notes(browser_ids, flags)
     assert_equals(len(notes), 2)
-
-
-def test_float_versions():
-    assert_equals(FeatureModel.float_version('9.1'), 9.1)
-
-
-def test_float_multiple_versions():
-    assert_equals(FeatureModel.float_multiple_versions('9.1'), 9.1)
-    assert_equals(FeatureModel.float_multiple_versions('9.1-9.3'), 9.1)
-    assert_equals(FeatureModel.float_multiple_versions('4.4.3-4.4.4'), 4.43)
-
-
-def test_float_sem_ver():
-    assert_equals(FeatureModel.float_sem_ver('9'), 9)
-    assert_equals(FeatureModel.float_sem_ver('6.7.8.9'), 6.789)
-    assert_greater(FeatureModel.float_sem_ver('6.7.8'), FeatureModel.float_sem_ver('6.7'))

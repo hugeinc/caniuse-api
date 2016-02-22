@@ -34,5 +34,7 @@ class CanIUseBot(object):
                 response = HipChatResponse("Feature not found", 'red')
         else:
             # todo output a template that lists instructions
-            response = HipChatResponse("No message content. Reply with a help command.", 'gray')
+            response = HipChatResponse(
+                "No message content. Reply with a help command.", 'gray'
+            )
         return response

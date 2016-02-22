@@ -1,8 +1,5 @@
 
-class HipChatMessage(object):
-
-    @staticmethod
-    def separate_mentions(msg, mentions):
+def separate_mentions(msg, mentions):
         for name in mentions:
             handle = ''.join(['@', name])
             if handle in msg:
@@ -11,8 +8,8 @@ class HipChatMessage(object):
                 msg = ' '.join(parts)
         return msg
 
-    @staticmethod
-    def separate_command(msg):
+
+def separate_command(msg):
         slug_index = msg.index('/')
         parts = msg.split(' ')
         for i in range(len(parts)):
@@ -20,6 +17,9 @@ class HipChatMessage(object):
                 cmd_slug = parts[i:i+1][0].strip()
                 parts.remove(cmd_slug)
                 return cmd_slug, ' '.join(parts).strip()
+
+
+class HipChatMessage(object):
 
     # todo add arg stripping and parsing
 
@@ -34,8 +34,8 @@ class HipChatMessage(object):
         try:
             for user in data.get('mentions', []):
                 self.mentions.append(user.get('mention_name'))
-            self.cmd_slug, body = HipChatMessage.separate_command(data.get('message', ''))
-            content = HipChatMessage.separate_mentions(body, self.mentions)
+            self.cmd_slug, body = separate_command(data.get('message', ''))
+            content = separate_mentions(body, self.mentions)
             self.content = content if len(content) else None
             return True
         except (AttributeError, ValueError, TypeError):
@@ -44,7 +44,12 @@ class HipChatMessage(object):
 
 class HipChatResponse(object):
 
-    def __init__(self, message, color="green", notify=False, message_format="html"):
+    def __init__(
+            self,
+            message,
+            color="green",
+            notify=False,
+            message_format="html"):
         self.data = {
             "color": color,
             "message": message,
