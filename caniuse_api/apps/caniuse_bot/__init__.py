@@ -1,16 +1,16 @@
+import collections
 from flask import render_template
 from caniuse_api.apps.hipchat import HipChatMessage, HipChatResponse
 
-browser_map = {
-        'ie': 'IE',
-        'edge': 'Edge',
-        'firefox': 'Firefox',
-        'chrome': 'Chrome',
-        'safari': 'Safari',
-        'opera': 'Opera',
-        'ios_saf': 'iOS',
-        'android': 'Android'
-    }
+browser_map = collections.OrderedDict()
+browser_map['ie'] = 'IE'
+browser_map['ios_saf'] = 'iOS'
+browser_map['android'] = 'Android'
+browser_map['firefox'] = 'Firefox'
+browser_map['chrome'] = 'Chrome'
+browser_map['safari'] = 'Safari'
+browser_map['edge'] = 'Edge'
+browser_map['opera'] = 'Opera'
 
 
 class CanIUseBot(object):
