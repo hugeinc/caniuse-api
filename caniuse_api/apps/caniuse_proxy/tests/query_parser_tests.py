@@ -1,9 +1,11 @@
-from nose.tools import *
-from mock import mock_loader
-from features import FeatureService, QueryParser
+from nose.tools import assert_equal
+from caniuse_api.mock import mock_loader
+from caniuse_api.apps.caniuse_proxy.service import FeatureService
+from caniuse_api.apps.caniuse_proxy.util import QueryParser
 
 
 def mock_parser():
+    # todo seperate this from service
     mock_config = mock_loader.load_mock('features/config')
     features = FeatureService()
     features.parse(mock_config)

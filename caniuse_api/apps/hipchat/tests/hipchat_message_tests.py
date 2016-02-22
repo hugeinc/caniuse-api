@@ -1,5 +1,5 @@
-from nose.tools import *
-from hipchat import HipChatMessage
+from nose.tools import assert_equals
+from caniuse_api.apps.hipchat import HipChatMessage
 
 
 def get_msg_mock(msg, name="Your Name", mentions=None, mention_name="Blinky"):

@@ -1,7 +1,7 @@
-from nose.tools import *
-from features import FeatureModel
-from mock import mock_loader
-from hipchat import browser_map
+from nose.tools import assert_equals, assert_greater
+from caniuse_api.apps.caniuse_proxy.model import FeatureModel
+from caniuse_api.apps.caniuse_bot import browser_map
+from caniuse_api.mock import mock_loader
 
 
 def get_feature_model(slug):
@@ -43,7 +43,7 @@ def test_get_version_notes_from_flag():
     assert_equals(notes, None)
 
 
-def test_get_version_notes_from_flag():
+def test_get_version_notes_from_supported_flag():
     feature = get_feature_model('svg')
     flag, notes = feature.get_version_notes_from_flag('y #2')
     assert_equals(flag, 'y')
@@ -79,4 +79,4 @@ def test_float_multiple_versions():
 def test_float_sem_ver():
     assert_equals(FeatureModel.float_sem_ver('9'), 9)
     assert_equals(FeatureModel.float_sem_ver('6.7.8.9'), 6.789)
-    assert_true(FeatureModel.float_sem_ver('6.7.8') > FeatureModel.float_sem_ver('6.7'))
+    assert_greater(FeatureModel.float_sem_ver('6.7.8'), FeatureModel.float_sem_ver('6.7'))
