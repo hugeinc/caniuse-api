@@ -1,4 +1,5 @@
 import requests
+from flask import current_app
 from caniuse_api.apps.caniuse_proxy.util import QueryParser
 from caniuse_api.apps.caniuse_proxy.model import FeatureModel
 
@@ -11,7 +12,8 @@ class FeatureService(object):
     def get_instance():
         try:
             return FeatureService.__instance
-        except AttributeError as e:
+        except AttributeError:
+            current_app.logger.info('initializing feature service')
             FeatureService.__instance = FeatureService()
             FeatureService.__instance.load()
         return FeatureService.__instance
@@ -28,19 +30,25 @@ class FeatureService(object):
         try:
             r = requests.get(endpoint)
             self.parse(r.json())
+            return True
         except requests.exceptions.RequestException as e:
-            # todo log e through "current_app" once that's been refactored
-            # todo consider loading offline data
-            print e
+            current_app.logger.error(
+                'Error loading config for FeatureService: %r' %
+                e.message
+            )
+            return False
 
     def parse(self, data):
         try:
             for item in data:
                 slug = item.get('name').split('.json')[0]
                 self.qp.add_valid_slug(slug)
-        except AttributeError:
-            # todo log parsing error through "current_app" once that's been refactored
-            pass
+        except AttributeError as e:
+            current_app.logger.error(
+                'Error parsing config for FeatureService: %r' %
+                e.message
+            )
+            current_app.logger.error(e.message)
 
     def get_feature(self, slug):
         if self.qp.is_valid_slug(slug):

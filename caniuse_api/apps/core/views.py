@@ -1,4 +1,4 @@
-from flask import jsonify, Blueprint, current_app
+from flask import jsonify, Blueprint
 
 main_blueprint = Blueprint(
     'main_blueprint',
@@ -14,6 +14,4 @@ def page_not_found(e):
 
 @main_blueprint.route('/')
 def index():
-    #todo more logging
-    current_app.logger.info('this works')
     return "The Can I Use API! Needs some HTML!"

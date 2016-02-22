@@ -1,4 +1,5 @@
 import requests
+from flask import current_app
 
 FEATURE_ENDPOINT = "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/%s.json"
 
@@ -55,8 +56,11 @@ class FeatureModel(object):
             r = requests.get(self.endpoint)
             self.parse(r.json())
         except requests.exceptions.RequestException as e:
-            # todo log error through "app" once that's been refactored
-            print e
+            current_app.logger.error(
+                'Error parsing model for Feature: %r \n %r' %
+                (self.endpoint, e.message)
+            )
+            return None
         return self.data
 
     def parse(self, data):
@@ -66,8 +70,10 @@ class FeatureModel(object):
             for browser, stat in stats:
                 self.support[browser] = FeatureModel.parse_browser_stats(stat)
         except AttributeError as e:
-            # todo log parsing error through "app" once that's been refactored
-            print e
+            current_app.logger.error(
+                'Error parsing model for Feature: %r \n %r' %
+                (self.endpoint, e.message)
+            )
 
     def get_min_support_by_flags(self, browser_id, flags):
         browser_support = self.support.get(browser_id)

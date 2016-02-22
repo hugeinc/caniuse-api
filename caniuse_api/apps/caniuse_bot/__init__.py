@@ -23,8 +23,6 @@ class CanIUseBot(object):
         if message.content:
             feature = self.features.search(message.content)
             if feature and feature.data:
-                # todo handle exceptions
-                feature.load()
                 response = HipChatResponse(
                     render_template(
                         'hipchat/feature_support_message.html',
