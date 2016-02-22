@@ -1,6 +1,7 @@
 from flask import request, jsonify, Blueprint
 from caniuse_api.apps.caniuse_proxy.service import FeatureService
 from caniuse_api.apps.caniuse_bot import CanIUseBot
+from caniuse_api.apps.core.auth import authorized
 
 bot_blueprint = Blueprint(
     'caniuse_bot',
@@ -10,6 +11,7 @@ bot_blueprint = Blueprint(
 
 
 @bot_blueprint.route('/hipchat', methods=['POST'])
+@authorized
 def api_hip_chat():
     features = FeatureService.get_instance()
     bot = CanIUseBot(features)
