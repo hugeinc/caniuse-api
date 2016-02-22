@@ -13,7 +13,7 @@ The application follows the guidelines from [Flask Patterns for Large Applicatio
 
 Running the App
 ---------------
-It is reccomended that you use (https://virtualenvwrapper.readthedocs.org/en/latest/install.html)[virtualenvwrapper] for this project.
+It is reccomended that you use [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/install.html) for this project.
 After setting up your virtual environment and cloning the repo, install the dependencies by running:
 ```
 pip install -r requirements.txt
