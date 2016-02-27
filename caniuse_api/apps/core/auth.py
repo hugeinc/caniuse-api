@@ -18,4 +18,3 @@ def authorized(fn):
             return None
         return fn(*args, **kwargs)
     return _wrap
-
