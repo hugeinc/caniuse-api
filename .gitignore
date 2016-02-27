@@ -4,6 +4,12 @@ bin
 lib
 include
 
+# ENV Files
+.env
+
+# configs
+*.cfg
+
 # Mac OS X custom attribute files
 .DS_Store
 
