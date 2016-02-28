@@ -1,4 +1,4 @@
-from flask import request, current_app, abort
+from flask import request, current_app, abort, session
 
 
 def validate_token(token):
@@ -18,3 +18,7 @@ def authorized(fn):
             return None
         return fn(*args, **kwargs)
     return _wrap
+
+
+def get_api_token():
+    return session.get('api_token', None)

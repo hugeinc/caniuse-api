@@ -4,7 +4,15 @@
     <div class="fnt--dark-gray txt--center p2">
         <header class="measure bg--off-white p2">
             <h1 class="h2">Can I Use? API</h1>
-            <p>Contact <a href="mailto:cedwards@hugeinc.com">cedwards@hugeinc.com</a> to obtain an API token.</p>
+            {% if not token %}
+                 <p>
+                    Login to Google+ in order to get an access token.
+                    This is to make sure you're not some kind of robot.
+                </p>
+                <a class="btn--red" href="{{ url_for('google_auth.get_token') }}">Login to Google+</a>
+            {% else %}
+                <p>Your token is {{ token }}</p>
+            {% endif %}
         </header>
     </div>
 

@@ -4,6 +4,7 @@ from flask.ext.markdown import Markdown
 from caniuse_api.apps.core.views import main_blueprint
 from caniuse_api.apps.caniuse_proxy.views import proxy_blueprint
 from caniuse_api.apps.caniuse_bot.views import bot_blueprint
+from caniuse_api.apps.google_auth.views import get_google_auth_blueprint
 
 app = Flask(__name__)
 Markdown(app)
@@ -18,6 +19,10 @@ elif not app.config.from_envvar('CANIUSE_API_CFG', True):
 app.register_blueprint(main_blueprint)
 app.register_blueprint(proxy_blueprint, url_prefix='/api/features')
 app.register_blueprint(bot_blueprint, url_prefix='/api/features')
+app.register_blueprint(
+    get_google_auth_blueprint(app.config),
+    url_prefix='/auth/google'
+)
 
 
 @app.errorhandler(404)
