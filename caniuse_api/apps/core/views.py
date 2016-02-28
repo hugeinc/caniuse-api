@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template
 from caniuse_api.apps.caniuse_proxy.service import FeatureService
 from caniuse_api.apps.core.auth import get_api_token
 

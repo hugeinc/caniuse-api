@@ -18,8 +18,8 @@
             <div class="px2">
                 {% set endpoint = url_for('caniuse_bot._wrap') %}
                 <h1 class="h4 bold">
-                    <a href="{{ endpoint }}" target="_blank" class="{{ internal_link }}">
-                        caniuse.features.hipchat?token={auth_token}
+                    <a href="{{ endpoint }}?token={{ token|default('') }}" target="_blank" class="{{ internal_link }}">
+                        caniuse.features.hipchat?token={api_token}
                     </a>
                 </h1>
                 <div class="pv1 px2 bg--off-white">

@@ -6,13 +6,14 @@
             <h1 class="h2">Can I Use? API</h1>
             {% if not token %}
                  <p>
-                    Login to Google+ in order to get an access token.
+                    Login to <span class="fnt--red">Google +</span> in order to get an access token.
                     This is to make sure you're not some kind of robot.
                 </p>
-                <a class="btn--red" href="{{ url_for('google_auth.get_token') }}">Login to Google+</a>
+                <a class="btn--red" href="{{ url_for('google_auth.get_token') }}">Login to Google +</a>
             {% else %}
-                <p>Your token is {{ token }}</p>
+                <p>Your token is: <span class="fnt--mid-gray">{{ token }}</span></p>
             {% endif %}
+            <a class="btn--gray" href="{{ url_for('main_blueprint.index') }}">Back to the docs</a>
         </header>
     </div>
 
