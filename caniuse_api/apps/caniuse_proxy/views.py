@@ -39,3 +39,16 @@ def feature_proxy(slug):
         return abort(404, {
             'errors': dict(message="feature not found")
         })
+
+
+@proxy_blueprint.errorhandler(404)
+def not_authorized(e):
+    resp = jsonify(
+        errors=[{
+            'status': 404,
+            'title': 'Feature Not Found',
+            'detail': str(e),
+        }]
+    )
+    resp.status_code = 404
+    return resp
