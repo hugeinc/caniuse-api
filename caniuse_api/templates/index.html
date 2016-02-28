@@ -1,0 +1,123 @@
+{% extends "base_layout.html" %}
+{% block page_content %}
+
+
+    <section id="overview">
+        <div class="p2 bg--orange fnt--dark-gray txt--center">
+            <h1 class="h2 my0">Can I Use?</h1>
+            <h2 class="h5 my0">An API proxy for <a class="fnt--white" href="http://caniuse.com" target="_blank">CanIUse.com</a></h2>
+        </div>
+    </section>
+
+    {% set info_h = "h5 bold dark--grey" %}
+    {% set internal_link = "fnt--orange" %}
+
+    <section id="endpoints" class="p2 measure">
+
+        <article id="hipchat-endpoint">
+            <div class="px2">
+                {% set endpoint = url_for('caniuse_bot._wrap') %}
+                <h1 class="h4 bold">
+                    <a href="{{ endpoint }}" target="_blank" class="{{ internal_link }}">
+                        caniuse.features.hipchat?token={auth_token}
+                    </a>
+                </h1>
+                <div class="pv1 px2 bg--off-white">
+                    <p>
+                        REST endpoint for <a href="https://blog.hipchat.com/2015/02/11/build-your-own-integration-with-hipchat/" target="_blank">HipChat Integration Hooks</a>.
+                    </p>
+                </div>
+                <div class="px2">
+                    <h2 class="{{ info_h }}">Methods</h2>
+                    <p>POST</p>
+                    <h2 class="{{ info_h }}">Authentication</h2>
+                    <p>requires an API token</p>
+                </div>
+            </div>
+        </article>
+
+        <article id="search-endpoint">
+            <div class="px2">
+                {% set endpoint = url_for('caniuse_api_proxy.search_proxy_features')  ~ '?q=' %}
+                <h1 class="h4 bold">
+                    <a href="{{ endpoint }}" target="_blank" class="{{ internal_link }}">caniuse.features.search?query={query}</a>
+                </h1>
+                <div class="pv1 px2 bg--off-white">
+                    <p>
+                        Searches CanIUse.com for a feature based on query string. Returns data for that feature if found.
+                        <a class="{{ internal_link }}" href="#available-features">See available features</a>.
+                    </p>
+                </div>
+                <div class="px2">
+                    <h2 class="{{ info_h }}">Methods</h2>
+                    <p>GET</p>
+
+                    <h2 class="{{ info_h }}">Authentication</h2>
+                    <p>none</p>
+                </div>
+            </div>
+        </article>
+
+        <article id="all-features-endpoint">
+            <div class="px2">
+                <h1 class="h4 bold">
+                    {% set endpoint = url_for('caniuse_api_proxy.all_proxy_features') %}
+                    <a href="{{ endpoint }}" class="{{ internal_link }}">caniuse.features.all</a>
+                </h1>
+                <div class="pv1 px2 bg--off-white">
+                    <p>
+                        Returns a list of all available feature slugs.
+                        See <a class="{{ internal_link }}" href="#feature-endpoint">the feature endpoint</a>.
+                    </p>
+                </div>
+                <div class="px2">
+                    <h2 class="{{ info_h }}">Methods</h2>
+                    <p>GET</p>
+                    <h2 class="{{ info_h }}">Authentication</h2>
+                    <p>none</p>
+                </div>
+            </div>
+        </article>
+
+         <article id="feature-endpoint" class="px2">
+
+            <h1 class="h4 bold">
+                <a href="#available-features" class="{{ internal_link }}">caniuse.features.{feature-slug}</a>
+            </h1>
+
+            <div class="pv1 px2 bg--off-white">
+                <p>
+                    Data for a feature's description, browser support, known bugs and issues as well as links to
+                    articles. You can use the <a class="{{ internal_link }}" href="#all-features-endpoint">all features endpoint</a>
+                    to obtain a list of all available feature slugs.
+                </p>
+            </div>
+
+            <div class="px2">
+                <h2 class="{{ info_h }}">Methods</h2>
+                <p>GET</p>
+                <h2 class="{{ info_h }}">Authentication</h2>
+                <p>none</p>
+            </div>
+
+            <section id="available-features">
+                <div class="px2">
+                    <h2 class="{{ info_h }}">Available Feature Endpoints:</h2>
+                    <ul class="list--unstyled">
+                        {% for slug in feature_slugs %}
+                            <li>
+                                {% set endpoint = url_for('caniuse_api_proxy.feature_proxy', slug=slug) %}
+                                <a class="{{ internal_link }}" href="{{ endpoint }}" target="_blank">
+                                    caniuse.features.{{ slug }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+
+        </article>
+
+    </section>
+
+{% endblock %}

@@ -12,7 +12,7 @@ bot_blueprint = Blueprint(
 
 @bot_blueprint.route('/hipchat', methods=['POST'])
 @authorized
-def api_hip_chat():
+def hip_chat():
     features = FeatureService.get_instance()
     bot = CanIUseBot(features)
     response = bot.parse_request(request.get_json())

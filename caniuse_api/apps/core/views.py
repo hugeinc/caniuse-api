@@ -1,5 +1,5 @@
-from flask import jsonify, Blueprint
-
+from flask import jsonify, Blueprint, render_template
+from caniuse_api.apps.caniuse_proxy.service import FeatureService
 main_blueprint = Blueprint(
     'main_blueprint',
     __name__,
@@ -14,4 +14,9 @@ def page_not_found(e):
 
 @main_blueprint.route('/')
 def index():
-    return "The Can I Use API! Needs some HTML!"
+    features = FeatureService.get_instance()
+    feature_slugs = features.qp.valid_slugs
+    return render_template(
+        'index.html',
+        feature_slugs=feature_slugs
+    )
