@@ -33,7 +33,7 @@ After cloning your repo and setting up your virtual environment, install the Pyt
 ```
 $ pip install -r requirements.txt
 ```
-And install the front-end by running [bower](http://bower.io/):
+And install the front-end dependencies by running [bower](http://bower.io/):
 ```
 $ bower install
 ```
