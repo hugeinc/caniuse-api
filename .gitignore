@@ -13,5 +13,8 @@ include
 # Mac OS X custom attribute files
 .DS_Store
 
+# bower dependencies
+caniuse_api/static/vendor
+
 #IDE stuff
 .idea

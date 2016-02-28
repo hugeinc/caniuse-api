@@ -1,0 +1,27 @@
+{
+  "name": "caniuse-api",
+  "homepage": "https://github.com/hugeinc/caniuse-api",
+  "authors": [
+    "cedwards <cedwards@hugeinc.com>"
+  ],
+  "description": "A Flask Proxy API for the data from CanIUse.com",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "caniuse.com",
+    "flask"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "furtive": "~2.2.3",
+    "modernizr": "~3.3.1"
+  }
+}
