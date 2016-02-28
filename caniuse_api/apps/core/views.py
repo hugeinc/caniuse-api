@@ -20,3 +20,10 @@ def index():
         'index.html',
         feature_slugs=feature_slugs
     )
+
+
+@main_blueprint.route('/auth-token')
+def auth_token():
+    return render_template(
+        'auth-token.html'
+    )

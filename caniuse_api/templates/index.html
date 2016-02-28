@@ -1,16 +1,16 @@
 {% extends "base_layout.html" %}
 {% block page_content %}
 
+    {% set info_h = "h5 bold dark--grey" %}
+    {% set internal_link = "fnt--orange" %}
+    {% set token_link = url_for('main_blueprint.auth_token') %}
 
     <section id="overview">
         <div class="p2 bg--orange fnt--dark-gray txt--center">
-            <h1 class="h2 my0">Can I Use?</h1>
+            <h1 class="h2">Can I Use?</h1>
             <h2 class="h5 my0">An API proxy for <a class="fnt--white" href="http://caniuse.com" target="_blank">CanIUse.com</a></h2>
         </div>
     </section>
-
-    {% set info_h = "h5 bold dark--grey" %}
-    {% set internal_link = "fnt--orange" %}
 
     <section id="endpoints" class="p2 measure">
 
@@ -31,7 +31,7 @@
                     <h2 class="{{ info_h }}">Methods</h2>
                     <p>POST</p>
                     <h2 class="{{ info_h }}">Authentication</h2>
-                    <p>requires an API token</p>
+                    <p>requires an <a href="{{ token_link }}" class="{{ internal_link }}">API token</a></p>
                 </div>
             </div>
         </article>
