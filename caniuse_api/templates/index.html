@@ -6,6 +6,11 @@
     {% set token_link = url_for('main_blueprint.auth_token') %}
 
     <section id="overview">
+        {% if not token %}
+            <nav class="flt--right">
+                <a class="btn--gray" href="{{ token_link }}">Get An API Token</a>
+            </nav>
+        {% endif %}
         <div class="p2 bg--orange fnt--dark-gray txt--center">
             <h1 class="h2">Can I Use?</h1>
             <h2 class="h5 my0">An API proxy for <a class="fnt--white" href="http://caniuse.com" target="_blank">CanIUse.com</a></h2>
