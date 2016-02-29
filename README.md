@@ -41,10 +41,32 @@ There is limited (but growing!) test coverage. To run the tests:
 ```
 $ nosetests
 ```
-After you've installed dependencies and verifed the tests are passing, run:
+After installing dependencies and verifying that the tests are passing, start the app:
 ```
 $ python runserver.py
 ```
 And you should see the app running on your [localhost at port 5000](http://localhost:5000).
 
-If you wish to run the HipChat endpoint locally, you'll want to use [ngrok](http://ngrok.com/) to tunnel your localhost to a publicly acessible endpoint for your Integration hook. 
+If you wish to expose the HipChat endpoint while running the project locally, you'll want to use [ngrok](http://ngrok.com/) to tunnel your localhost to a publicly accessible endpoint for your Integration hook. 
+
+Local Config
+------------
+To set local configuration settings create the following file in your project directory:
+```` 
+$ touch settings.cfg
+````
+And then export it to your bash profile:   
+```
+$ export CANIUSE_API_CFG=$PWD/settings.cfg
+```
+In this project repository settings.cfg is un-versioned so it's an *excellent* place to put the Google OAuth Key and Secret as well as an auth token for the HipChat endpoint.
+
+Go to the [Google Developer Console](https://code.google.com/apis/console) and create an API Key and Secret paired with your local [ngrok](http://ngrok.com/) url for callback. You may also want to create a pair of [GUIDs](https://www.guidgenerator.com/online-guid-generator.aspx) for your local app token and secret. Then add the following lines to your settings.cfg:
+```
+DEBUG=True
+TOKEN="your-local-api-token"
+SECRET_KEY="your-local-dev-secret"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+```
+Restart the server and go to the home page. Make sure you're viewing the site via your ngrok tunnel. Click the "Get API Token" link in the header. The Google OAuth flow should be working locally.
