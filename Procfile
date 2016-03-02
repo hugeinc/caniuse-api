@@ -1,1 +1,1 @@
-web: gunicorn runserver.py
+web: gunicorn caniuse_api:app
