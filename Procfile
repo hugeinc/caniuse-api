@@ -1,1 +1,1 @@
-web: gunicorn caniuse-api.wsgi --log-file -
+web: gunicorn runserver.py
