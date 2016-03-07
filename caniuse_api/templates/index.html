@@ -54,11 +54,25 @@
                     <a href="{{ endpoint }}" target="_blank" class="{{ internal_link }}">caniuse.features.search?query={query}</a>
                 </h1>
                 <div class="pv1 px2 bg--off-white">
-                    <p>
-                        Searches CanIUse.com for a feature based on query string. Returns data for that feature if found.
-                        <a class="{{ internal_link }}" href="#available-features">See available features</a>.
-                    </p>
+                    <div class="py1">
+                        <p>
+                            Searches CanIUse.com for a feature based on query string. Returns data for that feature if found.
+                            <a class="{{ internal_link }}" href="#available-features">See available features</a>.
+                        </p>
+                        <form action="{{ url_for('caniuse_api_proxy.search_proxy_features') }}" id="search-features">
+                            <div class="grd-row px2 center">
+                                <div class="grd-row-col-5-6 mx1">
+                                    <input name="q"/>
+                                </div>
+                                <div class="grd-row-col-1-6">
+                                    <input type="submit" value="Try It!" class="btn--blue" style="margin-top: 0;"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+
+
                 <div class="px2">
                     <h2 class="{{ info_h }}">Methods</h2>
                     <p>GET</p>
