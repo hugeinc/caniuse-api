@@ -2,7 +2,8 @@ import requests
 from flask import current_app
 from .util import float_version
 
-ENDPOINT = "https://raw.githubusercontent.com/Fyrd/caniuse/master/features-json/%s.json"
+ENDPOINT = "https://raw.githubusercontent.com/" \
+           "Fyrd/caniuse/master/features-json/%s.json"
 
 
 def parse_browser_stats(data):

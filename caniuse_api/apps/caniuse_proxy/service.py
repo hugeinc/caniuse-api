@@ -3,7 +3,8 @@ from flask import current_app
 from caniuse_api.apps.caniuse_proxy.util import QueryParser
 from caniuse_api.apps.caniuse_proxy.model import FeatureModel
 
-CONFIG_ENDPOINT = "https://api.github.com/repos/fyrd/caniuse/contents/features-json"
+CONFIG_ENDPOINT = "https://api.github.com/repos/" \
+                  "fyrd/caniuse/contents/features-json"
 
 
 class FeatureService(object):
