@@ -3,14 +3,20 @@
 
     {% set info_h = "h5 bold dark--grey" %}
     {% set internal_link = "fnt--orange" %}
-    {% set token_link = url_for('main_blueprint.auth_token') %}
+    {% set login_link = url_for('main_blueprint.login') %}
 
     <section id="overview">
-        {% if not token %}
-            <nav class="flt--right">
-                <a class="btn--gray" href="{{ token_link }}">Get An API Token</a>
-            </nav>
-        {% endif %}
+        <nav class="flt--right">
+            {% if user and token %}
+                <a class="btn--gray" href="{{ logout_link }}">
+                    Logout
+                </a>
+            {% else %}
+                <a class="btn--gray" href="{{ login_link }}">
+                    Login For An API Token
+                </a>
+            {% endif %}
+        </nav>
         <div class="p2 bg--orange fnt--dark-gray txt--center">
             <h1 class="h2">Can I Use?</h1>
             <h2 class="h5 my0">An API proxy for <a class="fnt--white" href="http://caniuse.com" target="_blank">CanIUse.com</a></h2>
@@ -36,7 +42,7 @@
                     <h2 class="{{ info_h }}">Methods</h2>
                     <p>POST</p>
                     <h2 class="{{ info_h }}">Authentication</h2>
-                    <p>requires an <a href="{{ token_link }}" class="{{ internal_link }}">API token</a></p>
+                    <p>requires an <a href="{{ login_link }}" class="{{ internal_link }}">API token</a></p>
                 </div>
             </div>
         </article>

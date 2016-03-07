@@ -1,6 +1,7 @@
-from flask import url_for, session, redirect, Blueprint, current_app
-from urllib2 import Request, urlopen, URLError
+from flask import url_for, session, redirect
+from flask import Blueprint, current_app
 from caniuse_api.apps.google_auth import get_auth_client
+from caniuse_api.apps.google_auth.model import User, TokenInvalid
 
 
 def get_google_auth_blueprint(config):
@@ -19,20 +20,13 @@ def get_google_auth_blueprint(config):
         if access_token is None:
             return redirect(url_for('google_auth.login'))
         access_token = access_token[0]
-
-        headers = {'Authorization': 'OAuth ' + access_token}
-        req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
-                      None, headers)
+        user = User()
         try:
-            res = urlopen(req)
-        except URLError as e:
-            if e.code == 401:
-                # unauthorized - bad token
-                session.pop('access_token', None)
-                return redirect(url_for('google_auth.login'))
-
-            return res.read()
-        return res.read()
+            resp = user.load(access_token)
+        except TokenInvalid:
+            session.pop('access_token', None)
+            return redirect(url_for('google_auth.login'))
+        return resp
 
     @gauth_blueprint.route('/login')
     def login():
@@ -45,7 +39,7 @@ def get_google_auth_blueprint(config):
         access_token = resp['access_token']
         session['access_token'] = access_token, ''
         session['api_token'] = current_app.config.get('TOKEN')
-        return redirect(url_for('main_blueprint.auth_token'))
+        return redirect(url_for('main_blueprint.login'))
 
     @google.tokengetter
     def get_access_token():

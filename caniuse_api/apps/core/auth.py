@@ -1,4 +1,4 @@
-from flask import request, current_app, abort, session
+from flask import request, current_app, abort, session, g
 
 
 def validate_token(token):
@@ -22,3 +22,9 @@ def authorized(fn):
 
 def get_api_token():
     return session.get('api_token', None)
+
+
+def logout_user():
+    g.user = None
+    session.pop('api_token', None)
+    session.pop('access_token', None)
