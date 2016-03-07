@@ -8,7 +8,7 @@
     <section id="overview">
         <nav class="flt--right">
             {% if user and token %}
-                <a class="btn--gray" href="{{ logout_link }}">
+                <a class="btn--gray" href="{{ url_for('main_blueprint.logout') }}">
                     Logout
                 </a>
             {% else %}
